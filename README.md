@@ -1,7 +1,7 @@
 Ethereum Multisignature Wallet
 ===================
 
-### This is a simplified version of the ([Gnosis MultiSigWallet](https://github.com/gnosis/MultiSigWallet))
+### Note: This is a forked & simplified version of the [Gnosis MultiSigWallet](https://github.com/gnosis/MultiSigWallet)
 
 Allows multiple parties to agree on transactions before execution. Allows to add and remove owners and update the number of required confirmations. A web user interface can be found [here](/dapp).
 
