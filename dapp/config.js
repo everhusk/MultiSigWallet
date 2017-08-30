@@ -2,7 +2,7 @@ var txDefaultOrig =
 {
   gasLimit: 3141592,
   gasPrice: 18000000000,
-  ethereumNode: "https://mainnet.infura.io:443",
+  ethereumNode: "https://ropsten.infura.io",
   alertsNode: 'https://alerts.gnosis.pm',
   connectionChecker:{
     method : "OPTIONS",
