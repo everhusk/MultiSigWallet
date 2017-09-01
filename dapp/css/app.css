@@ -2,9 +2,9 @@
     cursor: pointer;
 }
 
-.navbar {
+/*.navbar {
     font-weight: bold;
-}
+}*/
 
 .popover {
     max-width: 450px;
@@ -21,16 +21,27 @@ html {
 
 body {
     padding-top: 70px;
-    background-image: url(../img/Polymath4.png);
+    /*background-image: url(../img/aragon-logo.svg);
     background-repeat: no-repeat;
     background-position: bottom center;
     background-size: 512px;
-    background-attachment: fixed;
+    background-attachment: fixed;*/
 }
 
-.navbar-brand > img {
-    height: 32px;
-    margin-top: -6px;
+.navbar-brand img {
+  display: inline-block;
+  height: 32px;
+  margin-top: -9px;
+}
+
+.navbar-brand img:nth-child(1) {
+  height: 40px;
+  margin-right: 5px;
+}
+
+.navbar-brand img:nth-child(2) {
+  height: 17px;
+  margin-top: -8px;
 }
 
 .tx-data{

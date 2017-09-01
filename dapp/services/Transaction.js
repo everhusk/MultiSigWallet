@@ -24,6 +24,7 @@
 
       function getTransactionInfo(e, info) {
         if (!e && info) {
+          console.log('got tx indo', info)
           factory.update(info.hash, {info: info});
         }
       }
@@ -42,6 +43,7 @@
           factory.callbacks[tx.txHash] = tx.callback;
         }
         tx.date = new Date();
+        console.log('adding', tx)
         localStorage.setItem("transactions", JSON.stringify(transactions));
         factory.updates++;
         try {
@@ -57,6 +59,7 @@
       factory.update = function (txHash, newObj) {
         var transactions = factory.get();
         Object.assign(transactions[txHash], newObj);
+        console.log('adding', newObj)
         localStorage.setItem("transactions", JSON.stringify(transactions));
         factory.updates++;
         try {

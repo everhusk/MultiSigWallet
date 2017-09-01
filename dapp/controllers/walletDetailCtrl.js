@@ -2,17 +2,35 @@
   function () {
     angular
     .module("multiSigWeb")
-    .controller("walletDetailCtrl", function ($scope, $filter, $sce, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token, ABI) {
+    .controller("walletDetailCtrl", function ($scope, $http, $filter, $sce, Wallet, $routeParams, Utils, Transaction, $interval, $uibModal, Token, ABI) {
       $scope.wallet = {};
+
+      const hardcodedOwners = {
+        "0x4838eab6f43841e0d233db4cea47bd64f614f0c5": "Jorge Izquierdo",
+        "0xddc1b51b67dabd408b224d0f7dfcc93ec4b06265": "Luis Cuende",
+        "0xbeefbeef03c7e5a1c29e0aa675f8e16aee0a5fad": "Community Multisig",
+      }
+
+      const hardcodedTagline = {
+        "0x4838eab6f43841e0d233db4cea47bd64f614f0c5": ", Cofounder & Tech Lead",
+        "0xddc1b51b67dabd408b224d0f7dfcc93ec4b06265": ", Cofounder & Project Lead",
+        "0xbeefbeef03c7e5a1c29e0aa675f8e16aee0a5fad": "",
+      }
+
+      const hardCodedAddress = "0xcafe1a77e84698c83ca8931f54a755176ef75f2c"
+
+      $scope.isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
       $scope.$watch(
         function () {
           return Wallet.updates;
         },
         function () {
+
+
           // Javascript doesn't have a deep object copy, this is a patch
-          var copyObject = Wallet.getAllWallets()[$routeParams.address];
-          var tokenAddresses = Object.keys(copyObject.tokens);
+          var copyObject = Wallet.getAllWallets()[hardCodedAddress];
+          var tokenAddresses = [Object.keys(copyObject.tokens)];
           // The token collection is updated by the controller and the service, so must be merged.
           tokenAddresses.map(function(item){
             // Initialize, user token balance
@@ -38,11 +56,11 @@
       $scope.userTokens = {};
 
       $scope.currentPage = 1;
-      $scope.itemsPerPage = 5;
+      $scope.itemsPerPage = 20;
       $scope.totalItems = 0;
       $scope.showTxs = "all";
-      $scope.hideOwners = true;
-      $scope.hideTokens = true;
+      $scope.hideOwners = false;
+      $scope.hideTokens = false;
 
       $scope.updateParams = function () {
 
@@ -71,7 +89,7 @@
               for (var x=0; x<owners.length; x++){
                 if (walletOwnerskeys.indexOf($scope.owners[x]) == -1) {
                   $scope.wallet.owners[$scope.owners[x]] = {
-                    'name' : '',
+                    'name' : hardcodedOwners[$scope.owners[x]],
                     'address' : $scope.owners[x]
                   };
                 }
@@ -124,6 +142,25 @@
           )
         );
 
+        batch.add(
+          Wallet.getBalance(
+            hardCodedAddress,
+            function (e, balance) {
+              if(!e && balance){
+                $scope.$apply(function () {
+                  $scope.balance = balance;
+                })
+
+                $http.get('https://api.coinmarketcap.com/v1/ticker/ethereum/')
+                  .success(function(data, status, headers, config) {
+                      $scope.balanceUSD = new Web3().fromWei($scope.balance).toNumber() * parseFloat(data[0].price_usd)
+                      console.log('usd balance', $scope.balanceUSD)
+                  })
+
+                }
+              })
+          )
+
         // Get token info
         if ($scope.wallet.tokens) {
           Object.keys($scope.wallet.tokens)
@@ -134,9 +171,17 @@
               batch.add(
                 Token.balanceOf(
                   token,
-                  $scope.wallet.address,
+                  hardCodedAddress,
                   function (e, balance) {
-                    $scope.wallet.tokens[token].balance = balance;
+                    console.log('got balance', e, balance)
+                    $scope.wallet.tokens[token].balance = balance
+                    $http.get('https://api.coinmarketcap.com/v1/ticker/aragon/')
+                      .success(function(data, status, headers, config) {
+                          var web3 = new Web3()
+
+                          $scope.wallet.tokens[token].balanceUSD = web3.fromWei($scope.wallet.tokens[token].balance) * parseFloat(data[0].price_usd)
+                          console.log('ant usd balance', $scope.balanceUSD)
+                      })
                     Wallet.triggerUpdates();
                   }
                 )
@@ -179,9 +224,7 @@
       });
 
       $scope.getOwnerName = function (address) {
-        if ($scope.wallet.owners && $scope.wallet.owners[address]) {
-          return $scope.wallet.owners[address].name;
-        }
+        return hardcodedOwners[address] + hardcodedTagline[address]
       };
 
       $scope.getParam = function (tx) {
@@ -216,8 +259,9 @@
               var token = {};
               Object.assign(token, $scope.wallet.tokens[tokenAddress]);
               token.balance = new Web3().toBigNumber( "0x" + tx.data.slice(74));
+              let tokenName = $filter("token")(token)
               return {
-                title: "Transfer " + $filter("token")(token) + " to " + $filter("addressCanBeOwner")(account, $scope.wallet)
+                title: "Transfer " + tokenName.replace('undefined', 'ANT') + " to " + $filter("addressCanBeOwner")(account, $scope.wallet)
               };
             case "e20056e6":
               var oldOwner = "0x" + tx.data.slice(34, 74);
@@ -313,6 +357,8 @@
                       Object.assign($scope.transactions[tx], info);
 
                       var savedABI = ABI.get()[info.to];
+
+                      $scope.transactions[tx].toUrl = "https://etherscan.io/address/" + info.to;
 
                       // Get data info if data has not being decoded, because is a new transactions or we don't have the abi to do it
                       if (!$scope.transactions[tx].dataDecoded || $scope.transactions[tx].dataDecoded.notDecoded || ($scope.transactions[tx].dataDecoded.usedABI && (!savedABI || savedABI.abi ))) {

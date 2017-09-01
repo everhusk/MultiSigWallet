@@ -75,6 +75,7 @@
 
           $scope.updateInfo().then(function () {
             if (!Wallet.coinbase && txDefault.wallet !== "ledger") {
+              /*
               $uibModal.open({
                 templateUrl: 'partials/modals/web3Wallets.html',
                 size: 'md',
@@ -86,6 +87,7 @@
                   };
                 }
               });
+              */
             }
           });
         }

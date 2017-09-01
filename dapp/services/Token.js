@@ -2,13 +2,23 @@
   function () {
     angular
     .module("multiSigWeb")
-    .service("Token", function (Wallet) {
+    .service("Token", function (Wallet, $http) {
       var factory = {};
 
       factory.abi = abiJSON.token.abi;
 
       factory.balanceOf = function (address, owner, cb) {
+        /*
+        var uri = `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=${address}&address=${owner}&tag=latest&apikey=YourApiKeyToken`
+        $http.get(uri)
+          .success(function(data, status, headers, config) {
+            console.log('etherscan result', data)
+            cb(null, data.result)
+          })
+        */
+
         var instance = Wallet.web3.eth.contract(factory.abi).at(address);
+        console.log('token instance', instance, owner)
         return Wallet.callRequest(
           instance.balanceOf,
           [owner],

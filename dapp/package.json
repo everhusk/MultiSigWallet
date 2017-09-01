@@ -14,7 +14,8 @@
     "certs": "openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout localhost.key -out localhost.crt -subj '/CN=localhost/O=Multisig/C=US'",
     "dist": "zip -x node_modules/\\* -x npm-debug.log -x tests/\\* -x config.karma.js -x .DS_Store -x .gitignore -r ../multisigWallet.zip ./",
     "postinstall": "./node_modules/bower/bin/bower install && ./node_modules/grunt/bin/grunt ngtemplates",
-    "start": "pm2 start http-server"
+    "start": "http-server -a 0.0.0.0",
+    "dev": "http-server -a 0.0.0.0 -p 5000"
   },
   "keywords": [
     "ethereum",
@@ -33,11 +34,12 @@
   },
   "devDependencies": {
     "babel-register": "^6.24.0",
-    "coffee-script": "*",
+    "coffee-script": "^1.12.7",
     "grunt": "^1.0.0",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-eslint": "^19.0.0",
+    "grunt-gh-pages": "^2.0.0",
     "grunt-npm-command": "^0.1.2",
     "jasmine-core": "^2.5.2",
     "jshint": "^2.9.4",

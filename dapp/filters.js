@@ -1,5 +1,17 @@
 (
   function () {
+
+    Number.prototype.formatMoney = function(c, d, t){
+    var n = this,
+        c = isNaN(c = Math.abs(c)) ? 2 : c,
+        d = d == undefined ? "." : d,
+        t = t == undefined ? "," : t,
+        s = n < 0 ? "-" : "",
+        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+        j = (j = i.length) > 3 ? j % 3 : 0;
+       return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+     };
+
     angular
     .module("multiSigWeb")
     .filter('objectToArray', function () {
@@ -88,15 +100,23 @@
     .filter('ether', function () {
       return function (num) {
         if (num) {
-          var casted = new Web3().toBigNumber(num).div('1e18');
-          if (casted.gt(0)) {
-            return casted.toPrecision(Math.floor(Math.log(casted.toNumber())/Math.log(10) + 3)).toString(10) + " ETH";
+            var casted = new Web3().toBigNumber(num).div('1e18').toNumber();
+            return casted.formatMoney() + " ETH";
           }
           else {
             return "0.00 ETH";
           }
         }
         return null;
+    })
+    .filter('fiat', function () {
+      return function (num) {
+        return num ? `($${num.formatMoney()})` : null
+      };
+    })
+    .filter('etherscan', function () {
+      return function (txid) {
+        return 'https://etherscan.io/tx/' + txid
       };
     })
     .filter('token', function () {
