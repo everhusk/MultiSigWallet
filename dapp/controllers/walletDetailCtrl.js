@@ -6,18 +6,18 @@
       $scope.wallet = {};
 
       const hardcodedOwners = {
-        "0x4838eab6f43841e0d233db4cea47bd64f614f0c5": "Jorge Izquierdo",
-        "0xddc1b51b67dabd408b224d0f7dfcc93ec4b06265": "Luis Cuende",
-        "0xbeefbeef03c7e5a1c29e0aa675f8e16aee0a5fad": "Community Multisig",
+        "0xEfa1958B3248A95c08F0a964Ad844848f1D7e0A3": "Trevor Koverko",
+        "0x5e3409813CF6fC1403683C1515Ee25c2C3a55d82": "Chris Housser",
+        "0x3A97BdA5bfA7711FD4bb7b57dCDeB9D2C4c1c4FB": "Community Multisig",
       }
 
       const hardcodedTagline = {
-        "0x4838eab6f43841e0d233db4cea47bd64f614f0c5": ", Cofounder & Tech Lead",
-        "0xddc1b51b67dabd408b224d0f7dfcc93ec4b06265": ", Cofounder & Project Lead",
-        "0xbeefbeef03c7e5a1c29e0aa675f8e16aee0a5fad": "",
+        "0xEfa1958B3248A95c08F0a964Ad844848f1D7e0A3": ", CEO",
+        "0x5e3409813CF6fC1403683C1515Ee25c2C3a55d82": ", Cofounder & Lawyer",
+        "0x3A97BdA5bfA7711FD4bb7b57dCDeB9D2C4c1c4FB": "",
       }
 
-      const hardCodedAddress = "0xcafe1a77e84698c83ca8931f54a755176ef75f2c"
+      const hardCodedAddress = "0xFc45F4d0317B87bb1B4504F8507480652fBb9954"
 
       $scope.isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 

@@ -13,9 +13,9 @@ var txDefaultOrig =
   // Testrpc
   // walletFactoryAddress: "0xd79426bcee5b46fde413ededeb38364b3e666097"
   // Ropsten
-  // walletFactoryAddress: "0xa6d9c5f7d4de3cef51ad3b7235d79ccc95114de5"
-  // Mainnet
   walletFactoryAddress: "0xFc45F4d0317B87bb1B4504F8507480652fBb9954"
+  // Mainnet
+  // walletFactoryAddress: "0xFc45F4d0317B87bb1B4504F8507480652fBb9954"
 };
 
 var txDefault = {};
